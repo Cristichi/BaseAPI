@@ -62,7 +62,7 @@ public class AuthToken extends JSONObject {
         throw new RuntimeException("Scopes are in the wrong format. Class: %s.".formatted(getOrDefault("admittedScopes", new JSONArray()).getClass().getCanonicalName()));
     }
 
-    private long getExpiration() {
+    public long getExpiration() {
         return (long) getOrDefault("expiration", 0);
     }
 
@@ -86,23 +86,6 @@ public class AuthToken extends JSONObject {
         AuthToken auth = new AuthToken(tokenStr, user, LocalDateTime.now(), defaultExpirationSecs, scopes);
         DataStore.getInstance().putToken(auth);
         return auth;
-    }
-
-    public static CheckResult check(String token) {
-        AuthToken auth = DataStore.getInstance().getToken(token);
-        if (auth == null) {
-            return new CheckResult(Result.INVALID, null, null);
-        }
-        User user = DataStore.getInstance().getUser(auth.getUserEmail());
-        if (user == null){
-            return new CheckResult(Result.INVALID, null, null);
-        }
-        LocalDateTime now = LocalDateTime.now();
-        if (auth.getCreationDateTime().plusSeconds(auth.getExpiration()).compareTo(now) < 0) {
-            DataStore.getInstance().removeToken(token);
-            return new CheckResult(Result.EXPIRED, null, null);
-        }
-        return new CheckResult(Result.OK, auth, user);
     }
 
     public static record CheckResult(Result result, AuthToken auth, User user){

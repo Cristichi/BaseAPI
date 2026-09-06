@@ -44,7 +44,7 @@ public class BaseAPIMain {
     public static void main(String[] args) {
         try {
             DataStore.init();
-        } catch (Throwable e) {
+        } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
         }

@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import es.cristichi.baseapi.obj.data.User;
+import es.cristichi.baseapi.obj.io.DataStore;
 import es.cristichi.baseapi.obj.rest.ldap.AuthToken;
 import es.cristichi.baseapi.obj.rest.ldap.AuthToken.CheckResult;
 
@@ -55,7 +56,7 @@ public class HttpHandlerAdapter implements HttpHandler {
                     if (authorization.size() == 1) {
                         if (authorization.get(0).startsWith("Bearer ")) {
                             String bearerToken = authorization.get(0).substring("Bearer ".length());
-                            CheckResult check = AuthToken.check(bearerToken);
+                            CheckResult check = DataStore.getInstance().checkToken(bearerToken);
                             switch (check.result()) {
                                 case OK -> {
                                     if (checkScopes(check.auth().getScopes())) {

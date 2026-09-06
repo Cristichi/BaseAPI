@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,14 +28,14 @@ public class DataStore implements Serializable {
     private static final String FILENAME = "data.bin";
     private final String folderPath;
 
-    private HashMap<String, User> userMap;    
+    private HashMap<String, User> userMap;
     private HashMap<String, AuthToken> authMap;
 
     // this class is a singleton and should not be instantiated directly!
     private static DataStore instance = null;
 
     public static void init() throws IOException {
-        if (instance == null){
+        if (instance == null) {
             try {
                 instance = new DataStore();
             } catch (Exception e) {
@@ -53,7 +54,7 @@ public class DataStore implements Serializable {
         File saveFile = new File(folderPath, FILENAME);
         if (!saveFile.getParentFile().exists()) {
             saveFile.getParentFile().mkdirs();
-        } else if (saveFile.exists()){
+        } else if (saveFile.exists()) {
             readFromFile();
         } else {
             // dummy data
@@ -65,18 +66,18 @@ public class DataStore implements Serializable {
             putUser(new User("timmy@cristichi.es", "Timmy Neutrón",
                     Base64.getEncoder().encodeToString("1234".getBytes()),
                     "user_read"));
-            
+
             authMap = new HashMap<>(5);
             saveToFile();
         }
     }
 
-    public void saveToFile() throws FileNotFoundException, IOException{
+    public void saveToFile() throws FileNotFoundException, IOException {
         File saveFile = new File(folderPath, FILENAME);
         writeObject(new ObjectOutputStream(new FileOutputStream(saveFile)));
     }
 
-    public void readFromFile() throws FileNotFoundException, IOException, ClassNotFoundException{
+    public void readFromFile() throws FileNotFoundException, IOException, ClassNotFoundException {
         File saveFile = new File(folderPath, FILENAME);
         readObject(new ObjectInputStream(new FileInputStream(saveFile)));
     }
@@ -93,15 +94,15 @@ public class DataStore implements Serializable {
 
             // Let's remove the invalid ones, liked expired.
             Collection<AuthToken> readAuths = Collections.unmodifiableCollection(authMap.values());
-            for (AuthToken auth : readAuths){
-                CheckResult check = AuthToken.check(auth.getToken());
-                if (!check.result().equals(Result.OK)){
+            for (AuthToken auth : readAuths) {
+                CheckResult check = checkToken(auth.getToken());
+                if (!check.result().equals(Result.OK)) {
                     authMap.remove(auth.getToken());
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }        
+        }
     }
 
     public User getUser(String email) {
@@ -112,11 +113,11 @@ public class DataStore implements Serializable {
         userMap.put(person.getEmail(), person);
     }
 
-    public boolean containsToken(String token){
+    public boolean containsToken(String token) {
         return authMap.containsKey(token);
     }
 
-    public AuthToken putToken(AuthToken auth){
+    public AuthToken putToken(AuthToken auth) {
         return authMap.put(auth.getToken(), auth);
     }
 
@@ -126,5 +127,22 @@ public class DataStore implements Serializable {
 
     public AuthToken removeToken(String token) {
         return authMap.remove(token);
+    }
+
+    public CheckResult checkToken(String token) {
+        AuthToken auth = getToken(token);
+        if (auth == null) {
+            return new CheckResult(Result.INVALID, null, null);
+        }
+        User user = getUser(auth.getUserEmail());
+        if (user == null) {
+            return new CheckResult(Result.INVALID, null, null);
+        }
+        LocalDateTime now = LocalDateTime.now();
+        if (auth.getCreationDateTime().plusSeconds(auth.getExpiration()).compareTo(now) < 0) {
+            removeToken(token);
+            return new CheckResult(Result.EXPIRED, null, null);
+        }
+        return new CheckResult(Result.OK, auth, user);
     }
 }
