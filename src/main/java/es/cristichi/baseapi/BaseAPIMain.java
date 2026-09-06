@@ -14,10 +14,6 @@ import java.awt.event.WindowAdapter;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-/**
- *
- * @author Cristichi
- */
 public class BaseAPIMain {
     private static JFrame window = null;
     private static HttpServer server = null;

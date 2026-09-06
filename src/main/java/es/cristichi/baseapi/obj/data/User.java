@@ -7,10 +7,6 @@ import java.util.Base64;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-/**
- *
- * @author Cristichi
- */
 @SuppressWarnings("unchecked")
 public class User extends JSONObject {
     public User(String email, String username, String encryptedPsw, String... admittedScopes) {

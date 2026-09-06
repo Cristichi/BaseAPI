@@ -20,10 +20,6 @@ import es.cristichi.baseapi.obj.rest.ldap.AuthToken;
 import es.cristichi.baseapi.obj.rest.ldap.AuthToken.CheckResult;
 import es.cristichi.baseapi.obj.rest.ldap.AuthToken.Result;
 
-/**
- * Example DataStore class that provides access to user data. Pretend this class
- * accesses a database.
- */
 public class DataStore implements Serializable {
     private static final String FILENAME = "data.bin";
     private final String folderPath;

@@ -12,10 +12,6 @@ import org.json.simple.JSONObject;
 import es.cristichi.baseapi.obj.data.User;
 import es.cristichi.baseapi.obj.io.DataStore;
 
-/**
- *
- * @author Cristichi
- */
 @SuppressWarnings("unchecked")
 public class AuthToken extends JSONObject {
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_DATE_TIME;
