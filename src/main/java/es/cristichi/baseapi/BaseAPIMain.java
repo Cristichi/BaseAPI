@@ -1,7 +1,9 @@
 package es.cristichi.baseapi;
 
 import com.sun.net.httpserver.HttpServer;
-import es.cristichi.baseapi.rest.*;
+
+import es.cristichi.baseapi.obj.rest.*;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URISyntaxException;

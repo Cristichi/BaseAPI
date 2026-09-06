@@ -1,14 +1,15 @@
 /*
  */
-package es.cristichi.baseapi.rest.ldap;
+package es.cristichi.baseapi.obj.rest.ldap;
 
-import es.cristichi.baseapi.data.User;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
 import org.json.simple.JSONObject;
+
+import es.cristichi.baseapi.obj.data.User;
 
 /**
  *

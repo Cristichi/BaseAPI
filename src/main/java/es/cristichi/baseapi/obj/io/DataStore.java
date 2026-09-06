@@ -1,9 +1,10 @@
-package es.cristichi.baseapi.obj;
+package es.cristichi.baseapi.obj.io;
 
-import es.cristichi.baseapi.data.User;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+
+import es.cristichi.baseapi.obj.data.User;
 
 /**
  * Example DataStore class that provides access to user data. Pretend this class

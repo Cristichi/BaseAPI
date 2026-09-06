@@ -1,10 +1,12 @@
-package es.cristichi.baseapi.rest;
+package es.cristichi.baseapi.obj.rest;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
-import es.cristichi.baseapi.data.User;
-import es.cristichi.baseapi.obj.DataStore;
-import es.cristichi.baseapi.rest.ldap.AuthToken;
+
+import es.cristichi.baseapi.obj.data.User;
+import es.cristichi.baseapi.obj.io.DataStore;
+import es.cristichi.baseapi.obj.rest.ldap.AuthToken;
+
 import java.io.IOException;
 import java.util.Base64;
 import java.util.List;

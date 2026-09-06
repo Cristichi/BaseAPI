@@ -1,7 +1,9 @@
-package es.cristichi.baseapi.rest;
+package es.cristichi.baseapi.obj.rest;
 
 import com.sun.net.httpserver.HttpExchange;
-import es.cristichi.baseapi.data.User;
+
+import es.cristichi.baseapi.obj.data.User;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;

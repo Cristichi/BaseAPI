@@ -1,6 +1,6 @@
 /*
  */
-package es.cristichi.baseapi.data;
+package es.cristichi.baseapi.obj.data;
 
 import java.util.Base64;
 import org.json.simple.JSONObject;
