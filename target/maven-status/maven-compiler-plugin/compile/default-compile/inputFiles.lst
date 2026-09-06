@@ -1,0 +1,11 @@
+c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\BaseAPIMain.java
+c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\exc\ResourceNotFoundException.java
+c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\obj\data\User.java
+c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\obj\io\DataStore.java
+c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\obj\rest\AuthHandler.java
+c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\obj\rest\HttpHandlerAdapter.java
+c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\obj\rest\ldap\AuthToken.java
+c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\obj\rest\ServerAdminHandler.java
+c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\obj\rest\UserHandler.java
+c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\obj\rest\UserMeHandler.java
+c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\obj\rest\WebHandler.java
