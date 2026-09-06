@@ -26,7 +26,7 @@ public class UserHandler extends HttpHandlerAdapter {
                         .error(new ResourceNotFoundException("User not found"))
                         .build();
             }
-            return HttpResponse.fromJSON(200, user);
+            return HttpResponse.fromJSON(200, user.toOtherSafe());
         } else {
             return new HttpResponse.JsonBuilder(400)
                     .error("Parameter Not Found",

@@ -2,6 +2,7 @@ package es.cristichi.baseapi;
 
 import com.sun.net.httpserver.HttpServer;
 
+import es.cristichi.baseapi.obj.io.DataStore;
 import es.cristichi.baseapi.obj.rest.*;
 
 import java.io.IOException;
@@ -10,8 +11,6 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Color;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowAdapter;
 
@@ -27,6 +26,11 @@ public class BaseAPIMain {
     private static HttpServer server = null;
     
     public static void shutdown() {
+        try {
+            DataStore.getInstance().saveToFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         new Thread(() -> {
             if (server != null){
                 server.stop(3);
@@ -38,6 +42,12 @@ public class BaseAPIMain {
     }
 
     public static void main(String[] args) {
+        try {
+            DataStore.init();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
         try {
             window = new JFrame("Base API");
             window.addWindowListener(new WindowAdapter() {
@@ -80,9 +90,7 @@ public class BaseAPIMain {
             System.out.printf("Server running on \"%s\".%n", server.getAddress().toString());
         } catch (IOException ex) {
             System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, "Error while starting server.", ex);
-            if (server != null){
-               server.stop(5);
-            }
+            shutdown();
         }
     }
 }
