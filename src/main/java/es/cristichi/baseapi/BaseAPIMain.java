@@ -4,7 +4,12 @@ import com.sun.net.httpserver.HttpServer;
 import es.cristichi.baseapi.rest.*;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowAdapter;
 
@@ -33,7 +38,6 @@ public class BaseAPIMain {
     public static void main(String[] args) {
         try {
             window = new JFrame("Base API");
-            window.setSize(500, 400);
             window.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosing(WindowEvent e) {
@@ -44,10 +48,18 @@ public class BaseAPIMain {
                 }
             });
             window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-            window.setLayout(new BorderLayout());
-            window.add(new JLabel("Close this window to close the API."), BorderLayout.CENTER);
-            window.add(new JLabel("UI design is my passion."), BorderLayout.SOUTH);
+            try {
+                window.getContentPane().add(new JLabel(Files.readString(Path.of(BaseAPIMain.class.getResource("/ui/mainWindow.html").toURI()))));
+            } catch (URISyntaxException e1) {
+                e1.printStackTrace();
+                window.getContentPane().setLayout(new BorderLayout());
+                window.getContentPane().add(new JLabel("You are seeing this because there was an error trying to take the real UI for this."+
+                                                "You are not missing much."), BorderLayout.NORTH);
+                window.getContentPane().add(new JLabel("Close this window to close the API."), BorderLayout.CENTER);
+                window.getContentPane().add(new JLabel("UI design is my passion."), BorderLayout.SOUTH);
+            }
+            window.pack();
+            window.setLocationRelativeTo(null);
             window.setVisible(true);
 
             System.out.println("Creating server...");
