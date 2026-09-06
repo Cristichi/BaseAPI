@@ -5,7 +5,9 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import es.cristichi.baseapi.obj.data.User;
+import es.cristichi.baseapi.obj.io.DataStore;
 import es.cristichi.baseapi.obj.rest.ldap.AuthToken;
+import es.cristichi.baseapi.obj.rest.ldap.AuthToken.CheckResult;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -55,12 +57,12 @@ public class HttpHandlerAdapter implements HttpHandler {
                     if (authorization.size() == 1) {
                         if (authorization.get(0).startsWith("Bearer ")) {
                             String bearerToken = authorization.get(0).substring("Bearer ".length());
-                            Map.Entry<AuthToken.Result, AuthToken> check = AuthToken.check(bearerToken);
-                            switch (check.getKey()) {
+                            CheckResult check = AuthToken.check(bearerToken);
+                            switch (check.result()) {
                                 case OK -> {
-                                    if (checkScopes(check.getValue().scopes())) {
-                                        if (check.getValue().user().hasScopes(requiredScopes)) {
-                                            user = check.getValue().user();
+                                    if (checkScopes(check.auth().getScopes())) {
+                                        if (check.user().hasScopes(requiredScopes)) {
+                                            user = check.user();
                                             ok = true;
                                         } else {
                                             resObj = new HttpResponse.JsonBuilder(403)

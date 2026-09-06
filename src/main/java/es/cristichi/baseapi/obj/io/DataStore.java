@@ -114,8 +114,8 @@ public class DataStore implements Serializable {
         return authMap.containsKey(token);
     }
 
-    public AuthToken putToken(String token, AuthToken auth){
-        return authMap.put(token, auth);
+    public AuthToken putToken(AuthToken auth){
+        return authMap.put(auth.getToken(), auth);
     }
 
     public AuthToken getToken(String token) {

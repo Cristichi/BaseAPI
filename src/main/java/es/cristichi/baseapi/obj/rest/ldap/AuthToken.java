@@ -4,8 +4,11 @@ package es.cristichi.baseapi.obj.rest.ldap;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.AbstractMap;
 import java.util.Map;
+
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import es.cristichi.baseapi.obj.data.User;
@@ -15,18 +18,56 @@ import es.cristichi.baseapi.obj.io.DataStore;
  *
  * @author Cristichi
  */
-public record AuthToken(User user, LocalDateTime creation, long expiration, String... scopes) {
-    public JSONObject toJSON(String token) {
+public class AuthToken extends JSONObject {
+    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_DATE_TIME;
+    private AuthToken(String token, User user, LocalDateTime creation, long expiration, String... scopes){
+        put("expiration", expiration);
+        put("user", user.getEmail());
+        put("token", token);
+        put("creation", creation.format(dateFormatter));
+        JSONArray jsonScopes = new JSONArray();
+        for (String s : scopes) {
+            jsonScopes.add(s);
+        }
+        put("scopes", jsonScopes);
+    }
+
+    public JSONObject toSendAccessToken() {
         JSONObject ret = new JSONObject();
         ret.put("token_type", "Bearer");
-        ret.put("expires_in", expiration);
-        ret.put("access_token", token);
+        ret.put("expires_in", getExpiration());
+        ret.put("access_token", getToken());
         String scope = "";
-        for (String s : scopes) {
+        for (String s : getScopes()) {
             scope = scope.concat(",").concat(s);
         }
         ret.put("scope", scope);
         return ret;
+    }
+
+    public String getToken() {
+        return getOrDefault("token", "").toString();
+    }
+
+    public String getUserEmail() {
+        return getOrDefault("user", "").toString();
+    }
+
+    public String[] getScopes() {
+        if (getOrDefault("scopes", new JSONArray()) instanceof JSONArray scopes) {
+            if (scopes.toArray(new String[scopes.size()]) instanceof String[] scopesArray) {
+                return scopesArray;
+            }
+        }
+        throw new RuntimeException("Scopes are in the wrong format. Class: %s.".formatted(getOrDefault("admittedScopes", new JSONArray()).getClass().getCanonicalName()));
+    }
+
+    private long getExpiration() {
+        return (long) getOrDefault("expiration", 0);
+    }
+
+    public LocalDateTime getCreationDateTime() {
+        return LocalDateTime.parse(get("creation").toString(), dateFormatter);
     }
 
     private static final SecureRandom rng = new SecureRandom();
@@ -42,22 +83,29 @@ public record AuthToken(User user, LocalDateTime creation, long expiration, Stri
                     .toString();
         } while (DataStore.getInstance().containsToken(tokenStr));
 
-        AuthToken auth = new AuthToken(user, LocalDateTime.now(), defaultExpirationSecs, scopes);
-        DataStore.getInstance().putToken(tokenStr, auth);
+        AuthToken auth = new AuthToken(tokenStr, user, LocalDateTime.now(), defaultExpirationSecs, scopes);
+        DataStore.getInstance().putToken(auth);
         return new AbstractMap.SimpleEntry<>(tokenStr, auth);
     }
 
-    public static Map.Entry<Result, AuthToken> check(String token) {
+    public static CheckResult check(String token) {
         AuthToken auth = DataStore.getInstance().getToken(token);
         if (auth == null) {
-            return new AbstractMap.SimpleEntry<>(Result.INVALID, null);
+            return new CheckResult(Result.INVALID, null, null);
+        }
+        User user = DataStore.getInstance().getUser(auth.getUserEmail());
+        if (user == null){
+            return new CheckResult(Result.INVALID, null, null);
         }
         LocalDateTime now = LocalDateTime.now();
-        if (auth.creation.plusSeconds(auth.expiration).compareTo(now) < 0) {
+        if (auth.getCreationDateTime().plusSeconds(auth.getExpiration()).compareTo(now) < 0) {
             DataStore.getInstance().removeToken(token);
-            return new AbstractMap.SimpleEntry<>(Result.EXPIRED, null);
+            return new CheckResult(Result.EXPIRED, null, null);
         }
-        return new AbstractMap.SimpleEntry<>(Result.OK, auth);
+        return new CheckResult(Result.OK, auth, user);
+    }
+
+    public static record CheckResult(Result result, AuthToken auth, User user){
     }
 
     public static enum Result {

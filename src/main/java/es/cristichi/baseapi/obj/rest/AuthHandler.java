@@ -104,6 +104,6 @@ public class AuthHandler extends HttpHandlerAdapter {
         
         Map.Entry<String, AuthToken> authToken = AuthToken.generate(user, scopes);
 
-        return new HttpResponse(200, authToken.getValue().toJSON(authToken.getKey()));
+        return new HttpResponse(200, authToken.getValue().toSendAccessToken());
     }
 }
