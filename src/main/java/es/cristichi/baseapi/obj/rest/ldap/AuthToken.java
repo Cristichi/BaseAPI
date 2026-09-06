@@ -5,8 +5,6 @@ package es.cristichi.baseapi.obj.rest.ldap;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.AbstractMap;
-import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -18,6 +16,7 @@ import es.cristichi.baseapi.obj.io.DataStore;
  *
  * @author Cristichi
  */
+@SuppressWarnings("unchecked")
 public class AuthToken extends JSONObject {
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_DATE_TIME;
     private AuthToken(String token, User user, LocalDateTime creation, long expiration, String... scopes){

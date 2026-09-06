@@ -6,7 +6,6 @@ import com.sun.net.httpserver.HttpHandler;
 
 import es.cristichi.baseapi.obj.data.User;
 import es.cristichi.baseapi.obj.io.DataStore;
-import es.cristichi.baseapi.obj.rest.ldap.AuthToken;
 import es.cristichi.baseapi.obj.rest.ldap.AuthToken.CheckResult;
 
 import java.io.IOException;
@@ -251,6 +250,7 @@ public class HttpHandlerAdapter implements HttpHandler {
                 return this;
             }
 
+            @SuppressWarnings("unchecked")
             public JsonBuilder put(Object key, Object value) {
                 json.put(key, value);
                 return this;

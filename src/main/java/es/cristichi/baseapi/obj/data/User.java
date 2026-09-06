@@ -11,6 +11,7 @@ import org.json.simple.JSONObject;
  *
  * @author Cristichi
  */
+@SuppressWarnings("unchecked")
 public class User extends JSONObject {
     public User(String email, String username, String encryptedPsw, String... admittedScopes) {
         put("email", email);

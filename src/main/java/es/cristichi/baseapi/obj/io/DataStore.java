@@ -13,7 +13,6 @@ import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
 
 import es.cristichi.baseapi.obj.data.User;
 import es.cristichi.baseapi.obj.rest.ldap.AuthToken;
@@ -87,6 +86,7 @@ public class DataStore implements Serializable {
         out.writeObject(authMap);
     }
 
+    @SuppressWarnings("unchecked")
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
         try {
             userMap = (HashMap<String, User>) in.readObject();
