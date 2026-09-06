@@ -101,9 +101,7 @@ public class AuthHandler extends HttpHandlerAdapter {
                     .error("Unauthorized", "Unknown user or not authorized for the given scopes.")
                     .build();
         }
-        
-        Map.Entry<String, AuthToken> authToken = AuthToken.generate(user, scopes);
 
-        return new HttpResponse(200, authToken.getValue().toSendAccessToken());
+        return new HttpResponse(200, AuthToken.generate(user, scopes).toSendAccessToken());
     }
 }

@@ -28,7 +28,7 @@ public class BaseAPIMain {
     public static void shutdown() {
         try {
             DataStore.getInstance().saveToFile();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         new Thread(() -> {
@@ -44,9 +44,9 @@ public class BaseAPIMain {
     public static void main(String[] args) {
         try {
             DataStore.init();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
-            return;
+            System.exit(1);
         }
         try {
             window = new JFrame("Base API");

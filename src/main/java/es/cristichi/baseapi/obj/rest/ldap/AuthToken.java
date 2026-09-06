@@ -74,7 +74,7 @@ public class AuthToken extends JSONObject {
     private static final String charsAllowed = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final long defaultExpirationSecs = 90000;
 
-    public static Map.Entry<String, AuthToken> generate(User user, String... scopes) {
+    public static AuthToken generate(User user, String... scopes) {
         String tokenStr;
         do {
             tokenStr = rng.ints(rng.nextInt(30, 50), 0, charsAllowed.length())
@@ -85,7 +85,7 @@ public class AuthToken extends JSONObject {
 
         AuthToken auth = new AuthToken(tokenStr, user, LocalDateTime.now(), defaultExpirationSecs, scopes);
         DataStore.getInstance().putToken(auth);
-        return new AbstractMap.SimpleEntry<>(tokenStr, auth);
+        return auth;
     }
 
     public static CheckResult check(String token) {

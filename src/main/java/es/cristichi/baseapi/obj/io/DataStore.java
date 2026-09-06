@@ -9,16 +9,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Base64;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
 import es.cristichi.baseapi.obj.data.User;
 import es.cristichi.baseapi.obj.rest.ldap.AuthToken;
+import es.cristichi.baseapi.obj.rest.ldap.AuthToken.CheckResult;
+import es.cristichi.baseapi.obj.rest.ldap.AuthToken.Result;
 
 /**
  * Example DataStore class that provides access to user data. Pretend this class
@@ -28,7 +27,7 @@ public class DataStore implements Serializable {
     private static final String FILENAME = "data.bin";
     private final String folderPath;
 
-    private Map<String, User> userMap;    
+    private HashMap<String, User> userMap;    
     private HashMap<String, AuthToken> authMap;
 
     // this class is a singleton and should not be instantiated directly!
@@ -38,7 +37,7 @@ public class DataStore implements Serializable {
         if (instance == null){
             try {
                 instance = new DataStore();
-            } catch (ClassNotFoundException e) {
+            } catch (Exception e) {
                 throw new IOException("Could not read the objects in the file (old version?)", e);
             }
         }
@@ -66,10 +65,10 @@ public class DataStore implements Serializable {
             putUser(new User("timmy@cristichi.es", "Timmy Neutrón",
                     Base64.getEncoder().encodeToString("1234".getBytes()),
                     "user_read"));
+            
+            authMap = new HashMap<>(5);
             saveToFile();
         }
-
-        authMap = new HashMap<>(40);
     }
 
     public void saveToFile() throws FileNotFoundException, IOException{
@@ -83,19 +82,22 @@ public class DataStore implements Serializable {
     }
 
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-        out.writeInt(userMap.size());
-        for (User u : userMap.values()) {
-            out.writeObject(u);
-        }
-
+        out.writeObject(userMap);
+        out.writeObject(authMap);
     }
 
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
         try {
-            int uSize = in.readInt();
-            userMap = new HashMap<>(uSize);
-            for (int i = 0; i < uSize; i++){
-                putUser((User) in.readObject());
+            userMap = (HashMap<String, User>) in.readObject();
+            authMap = (HashMap<String, AuthToken>) in.readObject();
+
+            // Let's remove the invalid ones, liked expired.
+            Collection<AuthToken> readAuths = Collections.unmodifiableCollection(authMap.values());
+            for (AuthToken auth : readAuths){
+                CheckResult check = AuthToken.check(auth.getToken());
+                if (!check.result().equals(Result.OK)){
+                    authMap.remove(auth.getToken());
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
