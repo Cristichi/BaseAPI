@@ -50,7 +50,12 @@ public class BaseAPIMain {
             window.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosing(WindowEvent e) {
-                    System.out.println("Window is closing. Closing server.");
+                    System.out.println("Window is closing. Saving data and closing server.");
+                    try {
+                        DataStore.getInstance().saveToFile();
+                    } catch (Exception error) {
+                        error.printStackTrace();
+                    }
                     if (server != null){
                         server.stop(2);
                     }
