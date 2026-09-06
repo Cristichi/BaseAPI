@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Collection;
@@ -30,7 +31,6 @@ public class DataStore implements Serializable {
     private HashMap<String, User> userMap;
     private HashMap<String, AuthToken> authMap;
 
-    // this class is a singleton and should not be instantiated directly!
     private static DataStore instance = null;
 
     public static void init() throws IOException {
@@ -47,7 +47,12 @@ public class DataStore implements Serializable {
         return instance;
     }
 
-    // private constructor so people know to use the getInstance() function instead
+    public static String getResourceFileContent(String resourcePath) throws IOException {
+        try (var in = DataStore.class.getResourceAsStream(resourcePath)) {
+            return new String(in.readAllBytes(), StandardCharsets.UTF_8);
+        }
+    }
+
     private DataStore() throws IOException, ClassNotFoundException {
         folderPath = "%s/Documents/Base API/".formatted(System.getProperty("user.home"));
         File saveFile = new File(folderPath, FILENAME);

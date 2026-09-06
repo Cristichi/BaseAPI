@@ -3,13 +3,10 @@ package es.cristichi.baseapi.obj.rest;
 import com.sun.net.httpserver.HttpExchange;
 
 import es.cristichi.baseapi.obj.data.User;
+import es.cristichi.baseapi.obj.io.DataStore;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class WebHandler extends HttpHandlerAdapter {
     public WebHandler() {
@@ -25,23 +22,15 @@ public class WebHandler extends HttpHandlerAdapter {
             if (path.endsWith("/")) {
                 path = path.concat("index.html");
             }
-            URL resURL = WebHandler.class.getResource(resBasepath + path);
-            if (resURL != null) {
-                return new HttpResponse(200, Files.readString(Path.of(resURL.toURI())));
-            } else {
-                resURL = WebHandler.class.getResource(resBasepath + "/error/404.html");
-                return new HttpResponse(200, Files.readString(Path.of(resURL.toURI())));
+            try {
+                String page = DataStore.getResourceFileContent(resBasepath + path);
+                return new HttpResponse(200, page);
+            } catch(Exception e){
+                String page = DataStore.getResourceFileContent(resBasepath + "/error/404.html");
+                return new HttpResponse(200, page);
             }
-        } catch (URISyntaxException ex) {
-            System.getLogger(WebHandler.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-            return new HttpResponse.JsonBuilder(500)
-                    .error("Server Error", "Error in the server trying to get the HTML file")
-                    .build();
-        } catch (IOException ex) {
-            return new HttpResponse.JsonBuilder(500)
-                    .error("Server Error", "Error in the server trying to get the HTML file")
-                    .build();
         } catch (Exception ex) {
+            ex.printStackTrace();
             return new HttpResponse.JsonBuilder(500)
                     .error("Server Error", "Unexpected server error")
                     .build();

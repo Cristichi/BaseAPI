@@ -61,8 +61,8 @@ public class BaseAPIMain {
             });
             window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             try {
-                window.getContentPane().add(new JLabel(Files.readString(Path.of(BaseAPIMain.class.getResource("/ui/mainWindow.html").toURI()))));
-            } catch (URISyntaxException e1) {
+                window.getContentPane().add(new JLabel(DataStore.getResourceFileContent("/ui/mainWindow.html")));
+            } catch (Exception e1) {
                 e1.printStackTrace();
                 window.getContentPane().setLayout(new BorderLayout());
                 window.getContentPane().add(new JLabel("You are seeing this because there was an error trying to take the real UI for this."+
