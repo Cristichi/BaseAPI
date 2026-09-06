@@ -18,16 +18,19 @@ import javax.swing.JLabel;
 public class BaseAPIMain {
     private static JFrame window = null;
     private static HttpServer server = null;
-    private static boolean stopping = false;
     
     public static void shutdown() {
-        if (!stopping){
-            stopping = true;
-            window.dispose();
-        }
+        new Thread(() -> {
+            if (server != null){
+                server.stop(3);
+            }
+            if (window != null){
+                window.dispose();
+            }
+        }).start();
     }
 
-    public static void main(String[] args) {        
+    public static void main(String[] args) {
         try {
             window = new JFrame("Base API");
             window.setSize(500, 400);
