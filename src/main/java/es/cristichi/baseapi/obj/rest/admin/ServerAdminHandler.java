@@ -1,9 +1,10 @@
-package es.cristichi.baseapi.obj.rest;
+package es.cristichi.baseapi.obj.rest.admin;
 
 import com.sun.net.httpserver.HttpExchange;
 
 import es.cristichi.baseapi.BaseAPIMain;
 import es.cristichi.baseapi.obj.data.User;
+import es.cristichi.baseapi.obj.rest.HttpHandlerAdapter;
 
 import java.io.IOException;
 import org.json.simple.JSONObject;
