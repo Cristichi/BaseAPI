@@ -244,8 +244,8 @@ public class HttpHandlerAdapter implements HttpHandler {
                 return error(exc.getClass().getName(), exc.getMessage());
             }
 
-            public JsonBuilder error(String type, String msg) {
-                put("error", type);
+            public JsonBuilder error(String error, String msg) {
+                put("error", error);
                 put("msg", msg);
                 return this;
             }
