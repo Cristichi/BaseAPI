@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpServer;
 
 import es.cristichi.baseapi.obj.io.DataStore;
 import es.cristichi.baseapi.obj.rest.*;
+import es.cristichi.baseapi.obj.rest.admin.AdminUserHandler;
 import es.cristichi.baseapi.obj.rest.admin.ServerAdminHandler;
 import es.cristichi.baseapi.obj.rest.auth.AuthHandler;
 import es.cristichi.baseapi.obj.rest.user.UserHandler;
@@ -85,7 +86,9 @@ public class BaseAPIMain {
             
             server.createContext("/api/user", new UserHandler());
             server.createContext("/api/user/me", new UserMeHandler());
+            
             server.createContext("/api/admin/server", new ServerAdminHandler());
+            server.createContext("/api/admin/user", new AdminUserHandler());
             
             System.out.println("Starting server...");
             server.start();

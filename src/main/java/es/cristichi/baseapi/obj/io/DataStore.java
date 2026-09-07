@@ -61,7 +61,7 @@ public class DataStore implements Serializable {
             userMap = new HashMap<>(2);
             User adminCris = new User("admin@example.com", "Admin User",
                     Base64.getEncoder().encodeToString("nepe".getBytes()),
-                    "admin", "user_read");
+                    "admin_execute", "admin_read", "admin_write", "admin_delete", "user_read");
             putUser(adminCris);
             putUser(new User("timmy@example.com", "Timmy Cantón",
                     Base64.getEncoder().encodeToString("1234".getBytes()),
