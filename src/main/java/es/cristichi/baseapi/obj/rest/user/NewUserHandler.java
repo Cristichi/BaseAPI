@@ -54,8 +54,8 @@ public class NewUserHandler extends HttpHandlerAdapter {
                     .build();
             }
             if (DataStore.getInstance().containsUser(email)){
-                return new HttpResponse.JsonBuilder(400)
-                    .error("Incorrect Field", "Email already registered.")
+                return new HttpResponse.JsonBuilder(409)
+                    .error("Conflict", "Email already registered.")
                     .build();
             }
             User user = new User(
