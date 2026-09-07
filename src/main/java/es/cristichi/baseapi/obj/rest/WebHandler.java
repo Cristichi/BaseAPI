@@ -26,7 +26,7 @@ public class WebHandler extends HttpHandlerAdapter {
             try {
                 String page = DataStore.getResourceFileContent(resBasepath + path);
                 return new HttpResponse(200, page);
-            } catch(Exception e){
+            } catch (Exception e) {
                 String page = DataStore.getResourceFileContent(resBasepath + "/error/404.html");
                 return new HttpResponse(404, page);
             }

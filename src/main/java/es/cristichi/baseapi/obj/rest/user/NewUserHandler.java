@@ -20,8 +20,8 @@ public class NewUserHandler extends HttpHandlerAdapter {
     // Posted by shimatai
     // Retrieved 2026-09-07, License - CC BY-SA 3.0
     private final Pattern EMAIL_REGEX = Pattern.compile(
-        "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
-        Pattern.CASE_INSENSITIVE);
+            "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
+            Pattern.CASE_INSENSITIVE);
 
     public NewUserHandler() {
         super(false);
@@ -34,35 +34,35 @@ public class NewUserHandler extends HttpHandlerAdapter {
             JSONObject bodyJson = (JSONObject) new JSONParser().parse(body);
             if (!bodyJson.containsKey("email")) {
                 return new HttpResponse.JsonBuilder(400)
-                    .error("Missing Field", "Missing \"email\".")
-                    .build();
+                        .error("Missing Field", "Missing \"email\".")
+                        .build();
             }
             String email = bodyJson.get("email").toString();
-            if (!EMAIL_REGEX.matcher(email).matches()){
+            if (!EMAIL_REGEX.matcher(email).matches()) {
                 return new HttpResponse.JsonBuilder(400)
-                    .error("Incorrect Field", "Please use a valid email.")
-                    .build();
+                        .error("Incorrect Field", "Please use a valid email.")
+                        .build();
             }
             if (!bodyJson.containsKey("username")) {
                 return new HttpResponse.JsonBuilder(400)
-                    .error("Missing Field", "Missing \"username\".")
-                    .build();
+                        .error("Missing Field", "Missing \"username\".")
+                        .build();
             }
             if (!bodyJson.containsKey("password")) {
                 return new HttpResponse.JsonBuilder(400)
-                    .error("Missing Field", "Missing \"password\".")
-                    .build();
+                        .error("Missing Field", "Missing \"password\".")
+                        .build();
             }
-            if (DataStore.getInstance().containsUser(email)){
+            if (DataStore.getInstance().containsUser(email)) {
                 return new HttpResponse.JsonBuilder(409)
-                    .error("Conflict", "Email already registered.")
-                    .build();
+                        .error("Conflict", "Email already registered.")
+                        .build();
             }
             User user = new User(
-                email, 
-                bodyJson.get("username").toString(),
-                Base64.getEncoder().encodeToString(bodyJson.get("password").toString().getBytes()),
-                new String[]{"user_read"});
+                    email,
+                    bodyJson.get("username").toString(),
+                    Base64.getEncoder().encodeToString(bodyJson.get("password").toString().getBytes()),
+                    new String[] { "user_read" });
             DataStore.getInstance().putUser(user);
             return HttpResponse.fromJSON(200, user.toThemselvesSafe());
         } catch (ParseException e) {

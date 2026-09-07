@@ -15,7 +15,6 @@ import java.util.List;
 import org.json.simple.JSONObject;
 
 public class HttpHandlerAdapter implements HttpHandler {
-
     protected final boolean requiresToken;
     protected final String[] requiredScopes;
 
@@ -143,7 +142,8 @@ public class HttpHandlerAdapter implements HttpHandler {
         } finally {
             if (resObj == null) {
                 resObj = new HttpResponse.JsonBuilder(500)
-                        .error(new Exception("Oh no, server error. We are sorry, please contact Cristichi to see what happened and let him solve it"))
+                        .error(new Exception(
+                                "Oh no, server error. We are sorry, please contact Cristichi to see what happened and let him solve it"))
                         .build();
             }
             request.getResponseHeaders().putAll(resObj.getHeaders());
@@ -194,8 +194,8 @@ public class HttpHandlerAdapter implements HttpHandler {
         private final int status;
         private final Headers headers;
         private final String response;
-        
-        public static HttpResponse fromJSON(int status, JSONObject json){
+
+        public static HttpResponse fromJSON(int status, JSONObject json) {
             Headers headers = new Headers();
             headers.put("Content-type", List.of("application/json"));
             return new HttpResponse(status, headers, json);
@@ -227,11 +227,10 @@ public class HttpHandlerAdapter implements HttpHandler {
 
         @Override
         public String toString() {
-            return "HttpResponse (status=%d)%nHeaders:%n%s%nBody:%n%s%n".formatted(status, headers, response); 
+            return "HttpResponse (status=%d)%nHeaders:%n%s%nBody:%n%s%n".formatted(status, headers, response);
         }
 
         public static class JsonBuilder {
-
             private final int status;
             private final JSONObject json;
 

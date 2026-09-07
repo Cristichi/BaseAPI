@@ -13,7 +13,8 @@ import es.cristichi.baseapi.obj.io.DataStore;
 @SuppressWarnings("unchecked")
 public class AuthToken extends JSONObject {
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_DATE_TIME;
-    private AuthToken(String token, User user, LocalDateTime creation, long expiration, String... scopes){
+
+    private AuthToken(String token, User user, LocalDateTime creation, long expiration, String... scopes) {
         put("expiration", expiration);
         put("user", user.getEmail());
         put("token", token);
@@ -52,7 +53,8 @@ public class AuthToken extends JSONObject {
                 return scopesArray;
             }
         }
-        throw new RuntimeException("Scopes are in the wrong format. Class: %s.".formatted(getOrDefault("admittedScopes", new JSONArray()).getClass().getCanonicalName()));
+        throw new RuntimeException("Scopes are in the wrong format. Class: %s."
+                .formatted(getOrDefault("admittedScopes", new JSONArray()).getClass().getCanonicalName()));
     }
 
     public long getExpiration() {
@@ -81,7 +83,7 @@ public class AuthToken extends JSONObject {
         return auth;
     }
 
-    public static record CheckResult(Result result, AuthToken auth, User user){
+    public static record CheckResult(Result result, AuthToken auth, User user) {
     }
 
     public static enum Result {

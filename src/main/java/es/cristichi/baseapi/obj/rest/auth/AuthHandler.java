@@ -14,57 +14,57 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public class AuthHandler extends HttpHandlerAdapter {
-
     public AuthHandler() {
         super(false);
     }
-    
+
     @Override
     protected HttpResponse handlePOST(HttpExchange request, User ignored) throws IOException {
         Headers headers = request.getRequestHeaders();
-        
-        if (!headers.containsKey("Authorization")){
+
+        if (!headers.containsKey("Authorization")) {
             return new HttpResponse.JsonBuilder(401)
                     .error("Unauthorized", "Please use Authorization to continue.")
                     .build();
-        }        
-        if (!headers.containsKey("Content-type")){
+        }
+        if (!headers.containsKey("Content-type")) {
             return new HttpResponse.JsonBuilder(400)
                     .error("Bad Request", "What do you say the body is supposed to be?")
                     .build();
         }
-        
+
         List<String> authorization = headers.get("Authorization");
-        if (authorization.size() != 1){
+        if (authorization.size() != 1) {
             return new HttpResponse.JsonBuilder(400)
                     .error("Bad Request", "There can only be one Authorization header.")
                     .build();
         }
-        if (!authorization.get(0).startsWith("Basic ")){
+        if (!authorization.get(0).startsWith("Basic ")) {
             return new HttpResponse.JsonBuilder(400)
                     .error("Bad Request",
-                            "Value of header \"Authorization\" not accepted: "+authorization.get(0))
+                            "Value of header \"Authorization\" not accepted: " + authorization.get(0))
                     .build();
         }
-        
-        String[] userPass = new String(Base64.getDecoder().decode(authorization.get(0).substring("Basic ".length()))).split(":", 2);
+
+        String[] userPass = new String(Base64.getDecoder().decode(authorization.get(0).substring("Basic ".length())))
+                .split(":", 2);
         User user = DataStore.getInstance().getUser(userPass[0]);
-        if (user == null || !user.checkPsw(userPass[1])){
+        if (user == null || !user.checkPsw(userPass[1])) {
             return new HttpResponse.JsonBuilder(401)
                     .error("Unauthorized", "Unknown user or not authorized for the given scopes.")
                     .build();
         }
-        
+
         List<String> contentType = headers.get("Content-type");
-        if (contentType.size() != 1){
+        if (contentType.size() != 1) {
             return new HttpResponse.JsonBuilder(400)
                     .error("Bad Request", "Content-type header has to be only form encoded.")
                     .build();
         }
-        if (!contentType.get(0).equals("application/x-www-form-urlencoded")){
+        if (!contentType.get(0).equals("application/x-www-form-urlencoded")) {
             return new HttpResponse.JsonBuilder(400)
                     .error("Bad Request",
-                            "Value of header \"Content-type\" not accepted: "+contentType.get(0))
+                            "Value of header \"Content-type\" not accepted: " + contentType.get(0))
                     .build();
         }
         String body = new String(request.getRequestBody().readAllBytes());
@@ -74,7 +74,7 @@ public class AuthHandler extends HttpHandlerAdapter {
         while (bodyTokens.hasMoreTokens()) {
             String bodyToken = bodyTokens.nextToken();
             String[] values = bodyToken.split("=", 2);
-            if (values.length>1){
+            if (values.length > 1) {
                 switch (values[0]) {
                     case "grant_type" -> {
                         grantType = values[1];
@@ -85,18 +85,18 @@ public class AuthHandler extends HttpHandlerAdapter {
                 }
             }
         }
-        if (grantType == null || !grantType.equals("client_credentials")){
+        if (grantType == null || !grantType.equals("client_credentials")) {
             return new HttpResponse.JsonBuilder(400)
                     .error("Bad Request", "Invalid grant type.")
                     .build();
         }
-        if (scope == null || scope.isEmpty()){
+        if (scope == null || scope.isEmpty()) {
             return new HttpResponse.JsonBuilder(400)
                     .error("Bad Request", "No scopes selected.")
                     .build();
         }
         String[] scopes = scope.split("%2C");
-        if (!user.hasScopes(scopes)){
+        if (!user.hasScopes(scopes)) {
             return new HttpResponse.JsonBuilder(401)
                     .error("Unauthorized", "Unknown user or not authorized for the given scopes.")
                     .build();

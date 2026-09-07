@@ -94,7 +94,7 @@ public class DataStore implements Serializable {
             userMap = (HashMap<String, User>) in.readObject();
             authMap = (HashMap<String, AuthToken>) in.readObject();
 
-            if (authMap == null){
+            if (authMap == null) {
                 authMap = new HashMap<>(50);
             } else {
                 // Let's remove the invalid ones, liked expired.

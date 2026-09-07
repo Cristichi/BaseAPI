@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.net.URI;
 
 public class UserHandler extends HttpHandlerAdapter {
-
     public UserHandler() {
         super(true, "user_read");
     }

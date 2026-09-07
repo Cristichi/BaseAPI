@@ -34,7 +34,8 @@ public class User extends JSONObject {
                 return scopesArray;
             }
         }
-        throw new RuntimeException("Scopes are in the wrong format. Class: %s.".formatted(getOrDefault("admittedScopes", new JSONArray()).getClass().getCanonicalName()));
+        throw new RuntimeException("Scopes are in the wrong format. Class: %s."
+                .formatted(getOrDefault("admittedScopes", new JSONArray()).getClass().getCanonicalName()));
     }
 
     public boolean checkPsw(String password) {

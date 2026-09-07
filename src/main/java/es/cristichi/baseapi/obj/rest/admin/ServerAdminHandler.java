@@ -29,15 +29,16 @@ public class ServerAdminHandler extends HttpHandlerAdapter {
                             && opObj.getOrDefault("name", "") instanceof String opName) {
                         switch (opName) {
                             case "shutdown" -> {
-                                if (opObj.getOrDefault("chimichanga", "") instanceof String chimichangaStr){
+                                if (opObj.getOrDefault("chimichanga", "") instanceof String chimichangaStr) {
                                     try {
                                         // Just unnecesary requirements
-                                        Integer.valueOf(chimichangaStr); 
+                                        Integer.valueOf(chimichangaStr);
                                         BaseAPIMain.shutdown();
-                                        System.getLogger(ServerAdminHandler.class.getName()).log(System.Logger.Level.TRACE, "Admin {0} requested shutdown.",
+                                        System.getLogger(ServerAdminHandler.class.getName()).log(
+                                                System.Logger.Level.TRACE, "Admin {0} requested shutdown.",
                                                 admin.getEmail());
                                         return new HttpResponse(200, "{}");
-                                    } catch(NumberFormatException _){
+                                    } catch (NumberFormatException _) {
                                     }
                                 }
                             }

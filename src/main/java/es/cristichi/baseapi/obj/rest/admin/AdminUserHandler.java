@@ -15,7 +15,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 public class AdminUserHandler extends HttpHandlerAdapter {
-
     public AdminUserHandler() {
         super(true, "admin_write");
     }
@@ -37,10 +36,10 @@ public class AdminUserHandler extends HttpHandlerAdapter {
             String body = new String(request.getRequestBody().readAllBytes());
             try {
                 JSONObject bodyJson = (JSONObject) new JSONParser().parse(body);
-                if (bodyJson.containsKey("admittedScopes")){
+                if (bodyJson.containsKey("admittedScopes")) {
                     user.put("admittedScopes", bodyJson.get("admittedScopes"));
                 }
-                if (bodyJson.containsKey("username")){
+                if (bodyJson.containsKey("username")) {
                     user.put("username", bodyJson.get("username"));
                 }
                 DataStore.getInstance().putUser(user);
