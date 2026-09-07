@@ -13,7 +13,7 @@ import org.json.simple.parser.JSONParser;
 public class ServerAdminHandler extends HttpHandlerAdapter {
 
     public ServerAdminHandler() {
-        super(true, "admin");
+        super(true, "admin_execute");
     }
 
     @Override
