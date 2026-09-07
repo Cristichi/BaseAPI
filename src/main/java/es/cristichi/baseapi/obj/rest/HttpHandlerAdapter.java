@@ -244,7 +244,6 @@ public class HttpHandlerAdapter implements HttpHandler {
             }
 
             public JsonBuilder error(String type, String msg) {
-                put("status", Integer.toString(status));
                 put("type", type);
                 put("msg", msg);
                 return this;
