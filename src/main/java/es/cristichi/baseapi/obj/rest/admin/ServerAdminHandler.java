@@ -34,7 +34,7 @@ public class ServerAdminHandler extends HttpHandlerAdapter {
                                         // Just unnecesary requirements
                                         Integer.valueOf(chimichangaStr); 
                                         BaseAPIMain.shutdown();
-                                        System.out.printf("Admin %s requested shutdown.",
+                                        System.getLogger(ServerAdminHandler.class.getName()).log(System.Logger.Level.TRACE, "Admin {0} requested shutdown.",
                                                 admin.getEmail());
                                         return new HttpResponse(200, "{}");
                                     } catch(NumberFormatException _){

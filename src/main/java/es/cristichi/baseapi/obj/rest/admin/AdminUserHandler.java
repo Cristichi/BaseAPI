@@ -28,7 +28,6 @@ public class AdminUserHandler extends HttpHandlerAdapter {
         if (query.length() > 0) {
             User user = DataStore.getInstance().getUser(query);
             if (user == null) {
-                System.out.println(query);
                 return new HttpResponse.JsonBuilder(404)
                         .error(new ResourceNotFoundException("User not found"))
                         .put("user", query)

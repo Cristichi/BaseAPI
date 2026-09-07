@@ -2,6 +2,7 @@ package es.cristichi.baseapi.obj.rest;
 
 import com.sun.net.httpserver.HttpExchange;
 
+import es.cristichi.baseapi.BaseAPIMain;
 import es.cristichi.baseapi.obj.data.User;
 import es.cristichi.baseapi.obj.io.DataStore;
 
@@ -29,8 +30,8 @@ public class WebHandler extends HttpHandlerAdapter {
                 String page = DataStore.getResourceFileContent(resBasepath + "/error/404.html");
                 return new HttpResponse(404, page);
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, e);
             return new HttpResponse.JsonBuilder(500)
                     .error("Server Error", "Unexpected server error")
                     .build();

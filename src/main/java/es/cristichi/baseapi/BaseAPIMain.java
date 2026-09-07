@@ -28,7 +28,7 @@ public class BaseAPIMain {
         try {
             DataStore.getInstance().saveToFile();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, e);
         }
         new Thread(() -> {
             if (server != null){
@@ -41,10 +41,11 @@ public class BaseAPIMain {
     }
 
     public static void main(String[] args) {
+        System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.INFO, "Starting.");
         try {
             DataStore.init();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, e);
             System.exit(1);
         }
         try {
@@ -52,11 +53,11 @@ public class BaseAPIMain {
             window.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosing(WindowEvent e) {
-                    System.out.println("Window is closing. Saving data and closing server.");
+                    System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.INFO, "Window is closing. Saving data and closing server.");
                     try {
                         DataStore.getInstance().saveToFile();
                     } catch (Exception error) {
-                        error.printStackTrace();
+                        System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, error);
                     }
                     if (server != null){
                         server.stop(2);
@@ -67,7 +68,7 @@ public class BaseAPIMain {
             try {
                 window.getContentPane().add(new JLabel(DataStore.getResourceFileContent("/ui/mainWindow.html")));
             } catch (Exception e1) {
-                e1.printStackTrace();
+                System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, e1);
                 window.getContentPane().setLayout(new BorderLayout());
                 window.getContentPane().add(new JLabel("You are seeing this because there was an error trying to take the real UI for this."+
                                                 "You are not missing much."), BorderLayout.NORTH);
@@ -78,7 +79,7 @@ public class BaseAPIMain {
             window.setLocationRelativeTo(null);
             window.setVisible(true);
 
-            System.out.println("Creating server...");
+            System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.INFO, "Creating server...");
             server = HttpServer.create(new InetSocketAddress("localhost", 935), 0);
             
             server.createContext("/", new WebHandler());
@@ -92,11 +93,10 @@ public class BaseAPIMain {
             server.createContext("/api/admin/server", new ServerAdminHandler());
             server.createContext("/api/admin/user", new AdminUserHandler());
             
-            System.out.println("Starting server...");
             server.start();
-            System.out.printf("Server running on \"%s\".%n", server.getAddress().toString());
+            System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.INFO, "Server running on \"{0}\".", server.getAddress().toString());
         } catch (IOException ex) {
-            System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, "Error while starting server.", ex);
+            System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, ex);
             shutdown();
         }
     }

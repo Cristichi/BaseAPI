@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 
+import es.cristichi.baseapi.BaseAPIMain;
 import es.cristichi.baseapi.obj.data.User;
 import es.cristichi.baseapi.obj.ldap.AuthToken;
 import es.cristichi.baseapi.obj.ldap.AuthToken.CheckResult;
@@ -106,7 +107,7 @@ public class DataStore implements Serializable {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, e);
         }
     }
 

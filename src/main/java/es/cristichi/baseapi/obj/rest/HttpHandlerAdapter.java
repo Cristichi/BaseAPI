@@ -4,6 +4,7 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
+import es.cristichi.baseapi.BaseAPIMain;
 import es.cristichi.baseapi.obj.data.User;
 import es.cristichi.baseapi.obj.io.DataStore;
 import es.cristichi.baseapi.obj.ldap.AuthToken.CheckResult;
@@ -135,7 +136,7 @@ public class HttpHandlerAdapter implements HttpHandler {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, e);
             resObj = new HttpResponse.JsonBuilder(405)
                     .error(e)
                     .build();
