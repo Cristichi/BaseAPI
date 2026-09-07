@@ -35,11 +35,4 @@ public class UserHandler extends HttpHandlerAdapter {
                     .build();
         }
     }
-
-    @Override
-    protected HttpResponse handlePOST(HttpExchange request, User ignored) throws IOException {
-        return new HttpResponse.JsonBuilder(501)
-                .error("Not Yet Implemented", "We are working on it.")
-                .build();
-    }
 }
