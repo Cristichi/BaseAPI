@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpServer;
 import es.cristichi.baseapi.obj.io.DataStore;
 import es.cristichi.baseapi.obj.rest.*;
 import es.cristichi.baseapi.obj.rest.admin.ServerAdminHandler;
+import es.cristichi.baseapi.obj.rest.auth.AuthHandler;
 import es.cristichi.baseapi.obj.rest.user.UserHandler;
 import es.cristichi.baseapi.obj.rest.user.UserMeHandler;
 
