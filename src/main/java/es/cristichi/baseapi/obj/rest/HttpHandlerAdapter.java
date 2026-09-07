@@ -6,7 +6,7 @@ import com.sun.net.httpserver.HttpHandler;
 
 import es.cristichi.baseapi.obj.data.User;
 import es.cristichi.baseapi.obj.io.DataStore;
-import es.cristichi.baseapi.obj.rest.ldap.AuthToken.CheckResult;
+import es.cristichi.baseapi.obj.ldap.AuthToken.CheckResult;
 
 import java.io.IOException;
 import java.io.OutputStream;

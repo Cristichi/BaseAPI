@@ -5,7 +5,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import es.cristichi.baseapi.obj.data.User;
 import es.cristichi.baseapi.obj.io.DataStore;
-import es.cristichi.baseapi.obj.rest.ldap.AuthToken;
+import es.cristichi.baseapi.obj.ldap.AuthToken;
 
 import java.io.IOException;
 import java.util.Base64;

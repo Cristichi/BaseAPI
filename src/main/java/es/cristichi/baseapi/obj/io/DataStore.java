@@ -16,9 +16,9 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import es.cristichi.baseapi.obj.data.User;
-import es.cristichi.baseapi.obj.rest.ldap.AuthToken;
-import es.cristichi.baseapi.obj.rest.ldap.AuthToken.CheckResult;
-import es.cristichi.baseapi.obj.rest.ldap.AuthToken.Result;
+import es.cristichi.baseapi.obj.ldap.AuthToken;
+import es.cristichi.baseapi.obj.ldap.AuthToken.CheckResult;
+import es.cristichi.baseapi.obj.ldap.AuthToken.Result;
 
 public class DataStore implements Serializable {
     private static final String FILENAME = "data.bin";
@@ -93,12 +93,16 @@ public class DataStore implements Serializable {
             userMap = (HashMap<String, User>) in.readObject();
             authMap = (HashMap<String, AuthToken>) in.readObject();
 
-            // Let's remove the invalid ones, liked expired.
-            Collection<AuthToken> readAuths = Collections.unmodifiableCollection(authMap.values());
-            for (AuthToken auth : readAuths) {
-                CheckResult check = checkToken(auth.getToken());
-                if (!check.result().equals(Result.OK)) {
-                    authMap.remove(auth.getToken());
+            if (authMap == null){
+                authMap = new HashMap<>(50);
+            } else {
+                // Let's remove the invalid ones, liked expired.
+                Collection<AuthToken> readAuths = Collections.unmodifiableCollection(authMap.values());
+                for (AuthToken auth : readAuths) {
+                    CheckResult check = checkToken(auth.getToken());
+                    if (!check.result().equals(Result.OK)) {
+                        authMap.remove(auth.getToken());
+                    }
                 }
             }
         } catch (Exception e) {

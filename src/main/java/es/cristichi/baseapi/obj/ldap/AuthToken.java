@@ -1,6 +1,4 @@
-/*
- */
-package es.cristichi.baseapi.obj.rest.ldap;
+package es.cristichi.baseapi.obj.ldap;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
