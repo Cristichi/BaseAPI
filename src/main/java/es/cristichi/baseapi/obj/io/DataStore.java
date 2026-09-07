@@ -118,6 +118,10 @@ public class DataStore implements Serializable {
         userMap.put(person.getEmail(), person);
     }
 
+    public boolean containsUser(String email) {
+        return userMap.containsKey(email);
+    }
+
     public boolean containsToken(String token) {
         return authMap.containsKey(token);
     }

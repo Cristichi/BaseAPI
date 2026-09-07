@@ -7,6 +7,7 @@ import es.cristichi.baseapi.obj.rest.*;
 import es.cristichi.baseapi.obj.rest.admin.AdminUserHandler;
 import es.cristichi.baseapi.obj.rest.admin.ServerAdminHandler;
 import es.cristichi.baseapi.obj.rest.auth.AuthHandler;
+import es.cristichi.baseapi.obj.rest.user.NewUserHandler;
 import es.cristichi.baseapi.obj.rest.user.UserHandler;
 import es.cristichi.baseapi.obj.rest.user.UserMeHandler;
 
@@ -86,6 +87,7 @@ public class BaseAPIMain {
             
             server.createContext("/api/user", new UserHandler());
             server.createContext("/api/user/me", new UserMeHandler());
+            server.createContext("/api/user/register", new NewUserHandler());
             
             server.createContext("/api/admin/server", new ServerAdminHandler());
             server.createContext("/api/admin/user", new AdminUserHandler());
