@@ -10,24 +10,26 @@ import java.io.IOException;
 import java.net.URI;
 
 public class WebHandler extends HttpHandlerAdapter {
-    public WebHandler() {
+    protected String resourceBase;
+
+    public WebHandler(String resourceBase) {
         super(false);
+        this.resourceBase = resourceBase;
     }
 
     @Override
     protected HttpResponse handleGET(HttpExchange request, User ignored) throws IOException {
         try {
-            String resBasepath = "/web";
             URI uri = request.getRequestURI();
             String path = uri.toString();
             if (path.endsWith("/")) {
                 path = path.concat("index.html");
             }
             try {
-                String page = DataStore.getResourceFileContent(resBasepath + path);
+                String page = DataStore.getResourceFileContent(resourceBase + path);
                 return new HttpResponse(200, page);
             } catch (Exception e) {
-                String page = DataStore.getResourceFileContent(resBasepath + "/error/404.html");
+                String page = DataStore.getResourceFileContent(resourceBase + "/error/404.html");
                 return new HttpResponse(404, page);
             }
         } catch (Exception e) {
