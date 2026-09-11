@@ -2,10 +2,12 @@ c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\BaseAPIMain.ja
 c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\exc\ResourceNotFoundException.java
 c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\obj\data\User.java
 c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\obj\io\DataStore.java
-c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\obj\rest\AuthHandler.java
+c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\obj\ldap\AuthToken.java
+c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\obj\rest\admin\AdminUserHandler.java
+c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\obj\rest\admin\ServerAdminHandler.java
+c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\obj\rest\auth\AuthHandler.java
 c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\obj\rest\HttpHandlerAdapter.java
-c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\obj\rest\ldap\AuthToken.java
-c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\obj\rest\ServerAdminHandler.java
-c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\obj\rest\UserHandler.java
-c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\obj\rest\UserMeHandler.java
+c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\obj\rest\user\NewUserHandler.java
+c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\obj\rest\user\UserHandler.java
+c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\obj\rest\user\UserMeHandler.java
 c:\Todo\Apps Fullstack\BaseAPI\src\main\java\es\cristichi\baseapi\obj\rest\WebHandler.java

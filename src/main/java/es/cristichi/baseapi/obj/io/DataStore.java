@@ -18,7 +18,7 @@ import java.util.HashMap;
 import es.cristichi.baseapi.BaseAPIMain;
 import es.cristichi.baseapi.obj.data.User;
 import es.cristichi.baseapi.obj.ldap.AuthToken;
-import es.cristichi.baseapi.obj.ldap.AuthToken.CheckResult;
+import es.cristichi.baseapi.obj.ldap.AuthToken.TokenCheckResult;
 import es.cristichi.baseapi.obj.ldap.AuthToken.Result;
 
 public class DataStore implements Serializable {
@@ -100,7 +100,7 @@ public class DataStore implements Serializable {
                 // Let's remove the invalid ones, liked expired.
                 Collection<AuthToken> readAuths = Collections.unmodifiableCollection(authMap.values());
                 for (AuthToken auth : readAuths) {
-                    CheckResult check = checkToken(auth.getToken());
+                    TokenCheckResult check = checkToken(auth.getToken());
                     if (!check.result().equals(Result.OK)) {
                         authMap.remove(auth.getToken());
                     }
@@ -139,20 +139,20 @@ public class DataStore implements Serializable {
         return authMap.remove(token);
     }
 
-    public CheckResult checkToken(String token) {
+    public TokenCheckResult checkToken(String token) {
         AuthToken auth = getToken(token);
         if (auth == null) {
-            return new CheckResult(Result.INVALID, null, null);
+            return new TokenCheckResult(Result.INVALID, null, null);
         }
         User user = getUser(auth.getUserEmail());
         if (user == null) {
-            return new CheckResult(Result.INVALID, null, null);
+            return new TokenCheckResult(Result.INVALID, null, null);
         }
         LocalDateTime now = LocalDateTime.now();
         if (auth.getCreationDateTime().plusSeconds(auth.getExpiration()).compareTo(now) < 0) {
             removeToken(token);
-            return new CheckResult(Result.EXPIRED, null, null);
+            return new TokenCheckResult(Result.EXPIRED, null, null);
         }
-        return new CheckResult(Result.OK, auth, user);
+        return new TokenCheckResult(Result.OK, auth, user);
     }
 }

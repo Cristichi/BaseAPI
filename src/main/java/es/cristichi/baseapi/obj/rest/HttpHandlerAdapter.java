@@ -7,7 +7,7 @@ import com.sun.net.httpserver.HttpHandler;
 import es.cristichi.baseapi.BaseAPIMain;
 import es.cristichi.baseapi.obj.data.User;
 import es.cristichi.baseapi.obj.io.DataStore;
-import es.cristichi.baseapi.obj.ldap.AuthToken.CheckResult;
+import es.cristichi.baseapi.obj.ldap.AuthToken.TokenCheckResult;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -16,18 +16,44 @@ import org.json.simple.JSONObject;
 
 public class HttpHandlerAdapter implements HttpHandler {
     protected final boolean requiresToken;
-    protected final String[] requiredScopes;
+    protected final ScopeRequirement[] requiredScopes;
 
-    protected HttpHandlerAdapter(boolean requiresToken, String... requiredScopes) {
+    protected HttpHandlerAdapter(boolean requiresToken, ScopeRequirement... requiredScopes) {
         this.requiresToken = requiresToken;
+        if (!requiresToken && requiredScopes.length>0){
+            throw new RuntimeException("Handlers can't check scopes without a token.");
+        }
         this.requiredScopes = requiredScopes;
     }
 
-    protected boolean checkScopes(String... givenScopes) {
-        for (String rScope : requiredScopes) {
+    protected boolean checkGeneralScopes(TokenCheckResult tokenCheckResult) {
+        if (!tokenCheckResult.user().hasScopes(tokenCheckResult.auth().getScopes())){
+            return false;
+        }
+        for (ScopeRequirement scopeReq : requiredScopes) {
             boolean found = false;
-            for (String gScope : givenScopes) {
-                if (rScope.equals(gScope)) {
+            for (String gScope : tokenCheckResult.auth().getScopes()) {
+                if (scopeReq.method().equals("") && scopeReq.scope().equals(gScope)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    protected boolean checkScopes(String method, TokenCheckResult tokenCheckResult) {
+        if (!tokenCheckResult.user().hasScopes(tokenCheckResult.auth().getScopes())){
+            return false;
+        }
+        for (ScopeRequirement scopeReq : requiredScopes) {
+            boolean found = false;
+            for (String gScope : tokenCheckResult.auth().getScopes()) {
+                if ((scopeReq.method().equals("") || scopeReq.method().equals(method))
+                        && scopeReq.scope().equals(gScope)) {
                     found = true;
                     break;
                 }
@@ -44,7 +70,7 @@ public class HttpHandlerAdapter implements HttpHandler {
         String method = request.getRequestMethod();
         HttpResponse resObj = null;
         try {
-            User user = null;
+            TokenCheckResult tokenResult = null;
             boolean ok = true;
             if (requiresToken) {
                 ok = false;
@@ -55,19 +81,12 @@ public class HttpHandlerAdapter implements HttpHandler {
                     if (authorization.size() == 1) {
                         if (authorization.get(0).startsWith("Bearer ")) {
                             String bearerToken = authorization.get(0).substring("Bearer ".length());
-                            CheckResult check = DataStore.getInstance().checkToken(bearerToken);
+                            TokenCheckResult check = DataStore.getInstance().checkToken(bearerToken);
                             switch (check.result()) {
                                 case OK -> {
-                                    if (checkScopes(check.auth().getScopes())) {
-                                        if (check.user().hasScopes(requiredScopes)) {
-                                            user = check.user();
-                                            ok = true;
-                                        } else {
-                                            resObj = new HttpResponse.JsonBuilder(403)
-                                                    .error("Forbidden",
-                                                            "Method not allowed to this user.")
-                                                    .build();
-                                        }
+                                    if (checkGeneralScopes(check)) {
+                                        tokenResult = check;
+                                        ok = true;
                                     } else {
                                         resObj = new HttpResponse.JsonBuilder(403)
                                                 .error("Forbidden",
@@ -110,22 +129,64 @@ public class HttpHandlerAdapter implements HttpHandler {
             if (ok) {
                 switch (method) {
                     case "GET" -> {
-                        resObj = handleGET(request, user);
+                        if (checkScopes("GET", tokenResult)) {
+                            resObj = handleGET(request, tokenResult.user());
+                        } else {
+                            resObj = new HttpResponse.JsonBuilder(403)
+                                    .error("Forbidden",
+                                            "Missing scope on token or user.")
+                                    .build();
+                        }
                     }
                     case "POST" -> {
-                        resObj = handlePOST(request, user);
+                        if (checkScopes("POST", tokenResult)) {
+                            resObj = handlePOST(request, tokenResult.user());
+                        } else {
+                            resObj = new HttpResponse.JsonBuilder(403)
+                                    .error("Forbidden",
+                                            "Missing scope on token or user.")
+                                    .build();
+                        }
                     }
                     case "PUT" -> {
-                        resObj = handlePUT(request, user);
+                        if (checkScopes("PUT", tokenResult)) {
+                            resObj = handlePUT(request, tokenResult.user());
+                        } else {
+                            resObj = new HttpResponse.JsonBuilder(403)
+                                    .error("Forbidden",
+                                            "Missing scope on token or user.")
+                                    .build();
+                        }
                     }
                     case "PATCH" -> {
-                        resObj = handlePATCH(request, user);
+                        if (checkScopes("PATCH", tokenResult)) {
+                            resObj = handlePATCH(request, tokenResult.user());
+                        } else {
+                            resObj = new HttpResponse.JsonBuilder(403)
+                                    .error("Forbidden",
+                                            "Missing scope on token or user.")
+                                    .build();
+                        }
                     }
                     case "DELETE" -> {
-                        resObj = handleDELETE(request, user);
+                        if (checkScopes("DELETE", tokenResult)) {
+                            resObj = handleDELETE(request, tokenResult.user());
+                        } else {
+                            resObj = new HttpResponse.JsonBuilder(403)
+                                    .error("Forbidden",
+                                            "Missing scope on token or user.")
+                                    .build();
+                        }
                     }
                     case "OPTIONS" -> {
-                        resObj = handleOPTIONS(request, user);
+                        if (checkScopes("OPTIONS", tokenResult)) {
+                            resObj = handleOPTIONS(request, tokenResult.user());
+                        } else {
+                            resObj = new HttpResponse.JsonBuilder(403)
+                                    .error("Forbidden",
+                                            "Missing scope on token or user.")
+                                    .build();
+                        }
                     }
                     default -> {
                         resObj = new HttpResponse.JsonBuilder(405)
@@ -188,6 +249,12 @@ public class HttpHandlerAdapter implements HttpHandler {
         return new HttpResponse.JsonBuilder(405)
                 .error(new UnsupportedOperationException("Unsupported method: OPTIONS"))
                 .build();
+    }
+
+    public static record ScopeRequirement(String method, String scope) {
+        public ScopeRequirement(String scope) {
+            this("", scope);
+        }
     }
 
     public static class HttpResponse {

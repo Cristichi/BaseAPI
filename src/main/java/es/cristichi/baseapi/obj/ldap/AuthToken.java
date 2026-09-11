@@ -83,7 +83,7 @@ public class AuthToken extends JSONObject {
         return auth;
     }
 
-    public static record CheckResult(Result result, AuthToken auth, User user) {
+    public static record TokenCheckResult(Result result, AuthToken auth, User user) {
     }
 
     public static enum Result {
