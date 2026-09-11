@@ -82,11 +82,10 @@ public class HttpHandlerAdapter implements HttpHandler {
                     if (authorization.size() == 1) {
                         if (authorization.get(0).startsWith("Bearer ")) {
                             String bearerToken = authorization.get(0).substring("Bearer ".length());
-                            TokenCheckResult check = DataStore.getInstance().checkToken(bearerToken);
-                            switch (check.result()) {
+                            tokenResult = DataStore.getInstance().checkToken(bearerToken);
+                            switch (tokenResult.result()) {
                                 case OK -> {
-                                    if (checkGeneralScopes(check)) {
-                                        tokenResult = check;
+                                    if (checkGeneralScopes(tokenResult)) {
                                         ok = true;
                                     } else {
                                         resObj = new HttpResponse.JsonBuilder(403)
