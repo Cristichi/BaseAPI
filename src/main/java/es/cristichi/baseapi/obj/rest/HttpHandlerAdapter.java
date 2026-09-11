@@ -7,6 +7,7 @@ import com.sun.net.httpserver.HttpHandler;
 import es.cristichi.baseapi.BaseAPIMain;
 import es.cristichi.baseapi.obj.data.User;
 import es.cristichi.baseapi.obj.io.DataStore;
+import es.cristichi.baseapi.obj.ldap.AuthToken.Result;
 import es.cristichi.baseapi.obj.ldap.AuthToken.TokenCheckResult;
 
 import java.io.IOException;
@@ -70,7 +71,7 @@ public class HttpHandlerAdapter implements HttpHandler {
         String method = request.getRequestMethod();
         HttpResponse resObj = null;
         try {
-            TokenCheckResult tokenResult = null;
+            TokenCheckResult tokenResult = new TokenCheckResult(Result.OK, null, null);
             boolean ok = true;
             if (requiresToken) {
                 ok = false;
