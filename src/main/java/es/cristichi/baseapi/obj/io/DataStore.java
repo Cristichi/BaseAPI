@@ -14,6 +14,10 @@ import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 
 import es.cristichi.baseapi.BaseAPIMain;
 import es.cristichi.baseapi.obj.data.User;
@@ -98,7 +102,7 @@ public class DataStore implements Serializable {
                 authMap = new HashMap<>(50);
             } else {
                 // Let's remove the invalid ones, liked expired.
-                Collection<AuthToken> readAuths = Collections.unmodifiableCollection(authMap.values());
+                Collection<AuthToken> readAuths = Collections.unmodifiableCollection(new LinkedList<>(authMap.values()));
                 for (AuthToken auth : readAuths) {
                     TokenCheckResult check = checkToken(auth.getToken());
                     if (!check.result().equals(Result.OK)) {
@@ -108,6 +112,7 @@ public class DataStore implements Serializable {
             }
         } catch (Exception e) {
             System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, e);
+            e.printStackTrace();
         }
     }
 
