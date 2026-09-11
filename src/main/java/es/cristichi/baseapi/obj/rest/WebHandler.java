@@ -14,7 +14,7 @@ public class WebHandler extends HttpHandlerAdapter {
     protected final String notFoundPath;
 
     public WebHandler(String resourceBase, String notFoundPath) {
-        super(false);
+        super(new String[]{"GET"}, false);
         this.resourceBase = resourceBase;
         this.notFoundPath = notFoundPath;
     }

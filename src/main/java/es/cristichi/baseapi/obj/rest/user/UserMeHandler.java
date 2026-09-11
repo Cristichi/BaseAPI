@@ -14,7 +14,7 @@ import org.json.simple.parser.ParseException;
 
 public class UserMeHandler extends HttpHandlerAdapter {
     public UserMeHandler() {
-        super(true);
+        super(new String[]{"GET", "POST"}, true);
     }
 
     @Override

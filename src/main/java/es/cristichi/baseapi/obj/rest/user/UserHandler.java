@@ -12,7 +12,7 @@ import java.net.URI;
 
 public class UserHandler extends HttpHandlerAdapter {
     public UserHandler() {
-        super(true, new ScopeRequirement("GET", "user_read"));
+        super(new String[]{"GET"}, true, new ScopeRequirement("GET", "user_read"));
     }
 
     @Override

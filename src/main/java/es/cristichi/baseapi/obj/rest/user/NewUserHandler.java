@@ -24,7 +24,7 @@ public class NewUserHandler extends HttpHandlerAdapter {
             Pattern.CASE_INSENSITIVE);
 
     public NewUserHandler() {
-        super(false);
+        super(new String[]{"POST"}, false);
     }
 
     @Override

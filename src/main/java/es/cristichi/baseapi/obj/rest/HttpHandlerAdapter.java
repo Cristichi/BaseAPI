@@ -18,8 +18,16 @@ import org.json.simple.JSONObject;
 public class HttpHandlerAdapter implements HttpHandler {
     protected final boolean requiresToken;
     protected final ScopeRequirement[] requiredScopes;
+    protected final Headers optionsHeaders;
 
-    protected HttpHandlerAdapter(boolean requiresToken, ScopeRequirement... requiredScopes) {
+    protected HttpHandlerAdapter(String[] optionsHeaders, boolean requiresToken, ScopeRequirement... requiredScopes) {
+        Headers headers = new Headers();
+        headers.put("Allow", List.of(optionsHeaders));
+        this(headers, requiresToken, requiredScopes);
+    }
+
+    protected HttpHandlerAdapter(Headers optionsHeaders, boolean requiresToken, ScopeRequirement... requiredScopes) {
+        this.optionsHeaders = optionsHeaders;
         this.requiresToken = requiresToken;
         if (!requiresToken && requiredScopes.length > 0) {
             throw new RuntimeException("Handlers can't check scopes without a token.");
@@ -248,10 +256,8 @@ public class HttpHandlerAdapter implements HttpHandler {
                 .build();
     }
 
-    protected HttpResponse handleOPTIONS(HttpExchange request, User requester) throws IOException {
-        return new HttpResponse.JsonBuilder(405)
-                .error(new UnsupportedOperationException("Unsupported method: OPTIONS"))
-                .build();
+    private HttpResponse handleOPTIONS(HttpExchange request, User requester) throws IOException {
+        return new HttpResponse(204, optionsHeaders, "");
     }
 
     public static record ScopeRequirement(String method, String scope) {

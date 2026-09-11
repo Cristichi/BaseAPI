@@ -13,7 +13,7 @@ import org.json.simple.parser.JSONParser;
 public class ServerAdminHandler extends HttpHandlerAdapter {
 
     public ServerAdminHandler() {
-        super(true, new ScopeRequirement("admin_execute"));
+        super(new String[]{"POST"}, true, new ScopeRequirement("admin_execute"));
     }
 
     @Override

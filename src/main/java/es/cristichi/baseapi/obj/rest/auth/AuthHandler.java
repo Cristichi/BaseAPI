@@ -15,7 +15,7 @@ import java.util.StringTokenizer;
 
 public class AuthHandler extends HttpHandlerAdapter {
     public AuthHandler() {
-        super(false);
+        super(new String[]{"POST"}, false);
     }
 
     @Override
