@@ -89,7 +89,7 @@ public class BaseAPIMain {
             System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.INFO, "Creating server...");
             server = HttpServer.create(new InetSocketAddress("localhost", 935), 0);
             
-            server.createContext("/", new WebHandler("/web"));
+            server.createContext("/", new WebHandler("/web", "/web/error/404.html"));
             
             server.createContext("/auth/token", new AuthHandler());
             

@@ -10,11 +10,13 @@ import java.io.IOException;
 import java.net.URI;
 
 public class WebHandler extends HttpHandlerAdapter {
-    protected String resourceBase;
+    protected final String resourceBase;
+    protected final String notFoundPath;
 
-    public WebHandler(String resourceBase) {
+    public WebHandler(String resourceBase, String notFoundPath) {
         super(false);
         this.resourceBase = resourceBase;
+        this.notFoundPath = notFoundPath;
     }
 
     @Override
@@ -29,7 +31,7 @@ public class WebHandler extends HttpHandlerAdapter {
                 String page = DataStore.getResourceFileContent(resourceBase + path);
                 return new HttpResponse(200, page);
             } catch (Exception e) {
-                String page = DataStore.getResourceFileContent(resourceBase + "/error/404.html");
+                String page = DataStore.getResourceFileContent(notFoundPath);
                 return new HttpResponse(404, page);
             }
         } catch (Exception e) {
