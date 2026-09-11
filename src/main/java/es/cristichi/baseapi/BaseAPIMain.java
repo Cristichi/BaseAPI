@@ -27,8 +27,7 @@ public class BaseAPIMain {
         try {
             DataStore.getInstance().saveToFile();
         } catch (Exception e) {
-            System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, e);
-            e.printStackTrace();
+            System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, "Error trying to save to file.", e);
         }
         new Thread(() -> {
             if (server != null){
@@ -49,8 +48,7 @@ public class BaseAPIMain {
         try {
             DataStore.init();
         } catch (Exception e) {
-            System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, e);
-            e.printStackTrace();
+            System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR,"Error trying to initialize DataStore.", e);
             System.exit(1);
         }
         try {
@@ -62,8 +60,7 @@ public class BaseAPIMain {
                     try {
                         DataStore.getInstance().saveToFile();
                     } catch (Exception error) {
-                        System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, error);
-                        error.printStackTrace();
+                        System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, "Error trying to save to DataStore.", error);
                     }
                     if (server != null){
                         server.stop(2);
@@ -73,9 +70,8 @@ public class BaseAPIMain {
             window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             try {
                 window.getContentPane().add(new JLabel(DataStore.getResourceFileContent("/ui/mainWindow.html")));
-            } catch (Exception e1) {
-                System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, e1);
-                e1.printStackTrace();
+            } catch (Exception e) {
+                System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, "Error trying to get the UI page.", e);
                 window.getContentPane().setLayout(new BorderLayout());
                 window.getContentPane().add(new JLabel("You are seeing this because there was an error trying to take the real UI for this."+
                                                 "You are not missing much."), BorderLayout.NORTH);
@@ -104,7 +100,6 @@ public class BaseAPIMain {
             System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.INFO, "Server running on \"{0}\".", server.getAddress().toString());
         } catch (Exception e) {
             System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, "Error trying to create the server", e);
-            e.printStackTrace();
             shutdown(0);
         }
     }

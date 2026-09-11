@@ -35,8 +35,7 @@ public class WebHandler extends HttpHandlerAdapter {
                 return new HttpResponse(404, page);
             }
         } catch (Exception e) {
-            System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, e);
-            e.printStackTrace();
+            System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, "Error trying to get the web page from resources.", e);
             return new HttpResponse.JsonBuilder(500)
                     .error("Server Error", "Unexpected server error")
                     .build();

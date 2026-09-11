@@ -21,14 +21,14 @@ public class HttpHandlerAdapter implements HttpHandler {
 
     protected HttpHandlerAdapter(boolean requiresToken, ScopeRequirement... requiredScopes) {
         this.requiresToken = requiresToken;
-        if (!requiresToken && requiredScopes.length>0){
+        if (!requiresToken && requiredScopes.length > 0) {
             throw new RuntimeException("Handlers can't check scopes without a token.");
         }
         this.requiredScopes = requiredScopes;
     }
 
     protected boolean checkGeneralScopes(TokenCheckResult tokenCheckResult) {
-        if (!tokenCheckResult.user().hasScopes(tokenCheckResult.auth().getScopes())){
+        if (!tokenCheckResult.user().hasScopes(tokenCheckResult.auth().getScopes())) {
             return false;
         }
         for (ScopeRequirement scopeReq : requiredScopes) {
@@ -47,7 +47,7 @@ public class HttpHandlerAdapter implements HttpHandler {
     }
 
     protected boolean checkScopes(String method, TokenCheckResult tokenCheckResult) {
-        if (!tokenCheckResult.user().hasScopes(tokenCheckResult.auth().getScopes())){
+        if (!tokenCheckResult.user().hasScopes(tokenCheckResult.auth().getScopes())) {
             return false;
         }
         for (ScopeRequirement scopeReq : requiredScopes) {
@@ -196,13 +196,15 @@ public class HttpHandlerAdapter implements HttpHandler {
                 }
             }
         } catch (Exception e) {
-            System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, e);
-            e.printStackTrace();
+            System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, "Error handling request.", e);
             resObj = new HttpResponse.JsonBuilder(405)
                     .error(e)
                     .build();
         } finally {
             if (resObj == null) {
+                System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR,
+                        "Error handling request. resObj==null.",
+                        new NullPointerException("resObj is null."));
                 resObj = new HttpResponse.JsonBuilder(500)
                         .error(new Exception(
                                 "Oh no, server error. We are sorry, please contact Cristichi to see what happened and let him solve it"))

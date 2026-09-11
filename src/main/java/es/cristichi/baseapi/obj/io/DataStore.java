@@ -108,8 +108,7 @@ public class DataStore implements Serializable {
                 }
             }
         } catch (Exception e) {
-            System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, e);
-            e.printStackTrace();
+            System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, "Error trying to read DataStore.", e);
         }
     }
 
