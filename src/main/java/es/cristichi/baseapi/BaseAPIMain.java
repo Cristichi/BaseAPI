@@ -11,7 +11,6 @@ import es.cristichi.baseapi.obj.rest.user.NewUserHandler;
 import es.cristichi.baseapi.obj.rest.user.UserHandler;
 import es.cristichi.baseapi.obj.rest.user.UserMeHandler;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.awt.BorderLayout;
 import java.awt.event.WindowEvent;
@@ -24,7 +23,7 @@ public class BaseAPIMain {
     private static JFrame window = null;
     private static HttpServer server = null;
     
-    public static void shutdown() {
+    public static void shutdown(int delay) {
         try {
             DataStore.getInstance().saveToFile();
         } catch (Exception e) {
@@ -33,12 +32,16 @@ public class BaseAPIMain {
         }
         new Thread(() -> {
             if (server != null){
-                server.stop(3);
+                server.stop(delay);
             }
             if (window != null){
                 window.dispose();
             }
         }).start();
+    }
+    
+    public static void shutdown() {
+        shutdown(3);
     }
 
     public static void main(String[] args) {
@@ -99,10 +102,10 @@ public class BaseAPIMain {
             
             server.start();
             System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.INFO, "Server running on \"{0}\".", server.getAddress().toString());
-        } catch (IOException e) {
-            System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, e);
+        } catch (Exception e) {
+            System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, "Error trying to create the server", e);
             e.printStackTrace();
-            shutdown();
+            shutdown(0);
         }
     }
 }
