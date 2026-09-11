@@ -29,6 +29,7 @@ public class BaseAPIMain {
             DataStore.getInstance().saveToFile();
         } catch (Exception e) {
             System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, e);
+            e.printStackTrace();
         }
         new Thread(() -> {
             if (server != null){
@@ -46,6 +47,7 @@ public class BaseAPIMain {
             DataStore.init();
         } catch (Exception e) {
             System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, e);
+            e.printStackTrace();
             System.exit(1);
         }
         try {
@@ -58,6 +60,7 @@ public class BaseAPIMain {
                         DataStore.getInstance().saveToFile();
                     } catch (Exception error) {
                         System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, error);
+                        error.printStackTrace();
                     }
                     if (server != null){
                         server.stop(2);
@@ -69,6 +72,7 @@ public class BaseAPIMain {
                 window.getContentPane().add(new JLabel(DataStore.getResourceFileContent("/ui/mainWindow.html")));
             } catch (Exception e1) {
                 System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, e1);
+                e1.printStackTrace();
                 window.getContentPane().setLayout(new BorderLayout());
                 window.getContentPane().add(new JLabel("You are seeing this because there was an error trying to take the real UI for this."+
                                                 "You are not missing much."), BorderLayout.NORTH);
@@ -95,8 +99,9 @@ public class BaseAPIMain {
             
             server.start();
             System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.INFO, "Server running on \"{0}\".", server.getAddress().toString());
-        } catch (IOException ex) {
-            System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, ex);
+        } catch (IOException e) {
+            System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, e);
+            e.printStackTrace();
             shutdown();
         }
     }

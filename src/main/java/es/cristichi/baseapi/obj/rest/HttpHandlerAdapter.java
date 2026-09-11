@@ -129,7 +129,7 @@ public class HttpHandlerAdapter implements HttpHandler {
             if (ok) {
                 switch (method) {
                     case "GET" -> {
-                        if (checkScopes("GET", tokenResult)) {
+                        if (!requiresToken || checkScopes("GET", tokenResult)) {
                             resObj = handleGET(request, tokenResult.user());
                         } else {
                             resObj = new HttpResponse.JsonBuilder(403)
@@ -139,7 +139,7 @@ public class HttpHandlerAdapter implements HttpHandler {
                         }
                     }
                     case "POST" -> {
-                        if (checkScopes("POST", tokenResult)) {
+                        if (!requiresToken || checkScopes("POST", tokenResult)) {
                             resObj = handlePOST(request, tokenResult.user());
                         } else {
                             resObj = new HttpResponse.JsonBuilder(403)
@@ -149,7 +149,7 @@ public class HttpHandlerAdapter implements HttpHandler {
                         }
                     }
                     case "PUT" -> {
-                        if (checkScopes("PUT", tokenResult)) {
+                        if (!requiresToken || checkScopes("PUT", tokenResult)) {
                             resObj = handlePUT(request, tokenResult.user());
                         } else {
                             resObj = new HttpResponse.JsonBuilder(403)
@@ -159,7 +159,7 @@ public class HttpHandlerAdapter implements HttpHandler {
                         }
                     }
                     case "PATCH" -> {
-                        if (checkScopes("PATCH", tokenResult)) {
+                        if (!requiresToken || checkScopes("PATCH", tokenResult)) {
                             resObj = handlePATCH(request, tokenResult.user());
                         } else {
                             resObj = new HttpResponse.JsonBuilder(403)
@@ -169,7 +169,7 @@ public class HttpHandlerAdapter implements HttpHandler {
                         }
                     }
                     case "DELETE" -> {
-                        if (checkScopes("DELETE", tokenResult)) {
+                        if (!requiresToken || checkScopes("DELETE", tokenResult)) {
                             resObj = handleDELETE(request, tokenResult.user());
                         } else {
                             resObj = new HttpResponse.JsonBuilder(403)
@@ -179,7 +179,7 @@ public class HttpHandlerAdapter implements HttpHandler {
                         }
                     }
                     case "OPTIONS" -> {
-                        if (checkScopes("OPTIONS", tokenResult)) {
+                        if (!requiresToken || checkScopes("OPTIONS", tokenResult)) {
                             resObj = handleOPTIONS(request, tokenResult.user());
                         } else {
                             resObj = new HttpResponse.JsonBuilder(403)
@@ -197,6 +197,7 @@ public class HttpHandlerAdapter implements HttpHandler {
             }
         } catch (Exception e) {
             System.getLogger(BaseAPIMain.class.getName()).log(System.Logger.Level.ERROR, e);
+            e.printStackTrace();
             resObj = new HttpResponse.JsonBuilder(405)
                     .error(e)
                     .build();
